@@ -1,0 +1,2 @@
+from gossip.gossip_protocol import GossipProtocol
+from gossip.call_me_once_gossip_protocol import CallMeOnceGossipProtocol
