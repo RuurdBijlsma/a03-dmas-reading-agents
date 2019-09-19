@@ -1,7 +1,7 @@
 ## Gossip task division simulation
 This program simulates a multi-agent task division problem with gossip.
 ### Running the program
-Required python version: 3+
+Required python version: Developed for 3.7, but any version above 3 should work.
 
 To run the program, execute: 
 
