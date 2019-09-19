@@ -6,6 +6,7 @@ from gossip import CallMeOnceGossipProtocol
 
 secret = random.randint(1, parameters.N_BOOKS)
 
+# Create agents that pick randomly and communicate using a Call Me Once protocol
 agents = []
 for i in range(0, parameters.N_AGENTS):
     agent = RandomAgent(i)
