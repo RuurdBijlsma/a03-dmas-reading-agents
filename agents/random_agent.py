@@ -5,10 +5,6 @@ from agents import Agent
 
 
 class RandomAgent(Agent):
-    @staticmethod
-    def next_choice():
-        return random.randint(1, parameters.N_BOOKS)
-
     def choose_book(self):
         random_unread_book = random.randint(1, parameters.N_BOOKS - len(self.read_books))
 
