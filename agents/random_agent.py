@@ -10,12 +10,12 @@ class RandomAgent(Agent):
         return random.randint(1, parameters.N_BOOKS)
 
     def choose_book(self):
-        # Don't reread books (random.randint can be used if this rereading is desired) This is too slow!
-        # options = [n for n in range(1, parameters.N_BOOKS + 1) if n not in self.read_books]
-        # self.choice = random.choice(options)
+        random_unread_book = random.randint(1, parameters.N_BOOKS - len(self.read_books))
 
-        # TODO: This can cause problems if the search takes a long time (causing to chance of collision to increase)
-        # Keeping track of a set of available options might be faster
-        self.choice = self.next_choice()
-        while self.choice in self.read_books:
-            self.choice = self.next_choice()
+        for book in self.read_books:
+            if book <= random_unread_book:
+                random_unread_book += 1
+            else:
+                break
+
+        self.choice = random_unread_book
