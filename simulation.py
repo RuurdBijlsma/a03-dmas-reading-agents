@@ -55,7 +55,7 @@ class Simulation(object):
                         agent.gossip(other)
 
             # provided the gossiping works, each agent has the same list of read books, unless some agents are exhausted
-            assert (len(set(map(lambda a: len(a.read_books), self.agents))) == 1)
+            # assert (len(set(map(lambda a: len(a.read_books), self.agents))) == 1)
 
             if self.secret in self.agents[0].read_books:
                 secret_found = True

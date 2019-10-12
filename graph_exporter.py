@@ -28,7 +28,7 @@ def test():
         gossip_protocol=gossip.CallMeOnceGossipProtocol
     )
 
-    results = run_multiple_simulations(p_from, p_to, 20, 5)
+    results = run_multiple_simulations(p_from, p_to, 20, 15)
 
     get_lowest_energy(results)
     export_results_to_csv('test_123', results, p_from)
