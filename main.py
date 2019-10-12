@@ -1,7 +1,10 @@
 from simulation import Simulation
 import statistics
 from parameters_config import parameters
+import graph_exporter
 
-sim = Simulation(parameters)
-energies = sim.run()
-print("Energy used", str(statistics.mean(energies)))
+if __name__ == '__main__':
+    graph_exporter.test()
+
+# sim = Simulation(parameters)
+# energies = sim.run()

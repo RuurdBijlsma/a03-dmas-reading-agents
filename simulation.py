@@ -4,9 +4,11 @@ from agents import RandomAgent
 
 
 class Simulation(object):
-    def __init__(self, parameters):
+    def __init__(self, parameters, log=False):
+        assert parameters.n_agents is not 0
         self.parameters = parameters
 
+        self.log = log
         self.secret = random.randint(1, self.parameters.n_books)
         self.agents = []
         self.book_reads = {}
@@ -25,11 +27,11 @@ class Simulation(object):
             self.agents.append(agent)
 
     def run(self):
-        print("Agents will now start searching books for the secret")
-        print("Protocol: {}, book count: {}, agent count: {}".format(self.parameters.gossip_protocol.__name__,
-                                                                     self.parameters.n_books,
-                                                                     self.parameters.n_agents))
-        print(
+        self.print("Agents will now start searching books for the secret")
+        self.print("Protocol: {}, book count: {}, agent count: {}".format(self.parameters.gossip_protocol.__name__,
+                                                                          self.parameters.n_books,
+                                                                          self.parameters.n_agents))
+        self.print(
             "\nStarting simulation, each iteration every agent will read a random" +
             " book which hasn't already been read in the previous iterations" +
             "\nAt the end of each iteration the agents share which books have been read via gossip")
@@ -37,7 +39,7 @@ class Simulation(object):
 
         secret_found = False
         while True:
-            print("Iteration {}".format(iteration))
+            self.print("Iteration {}".format(iteration))
 
             for agent in self.agents:
                 agent.choose_book()
@@ -76,11 +78,15 @@ class Simulation(object):
                 duplicate_book_reads += 1
 
         if secret_found:
-            print("secret found: {}".format(self.secret))
-        print("\nRead books (synchronized between all agents via gossip): {}".format(self.agents[0].read_books))
+            self.print("secret found: {}".format(self.secret))
+        self.print("\nRead books (synchronized between all agents via gossip): {}".format(self.agents[0].read_books))
 
-        print("Read {} out of {} books".format(books_read, self.parameters.n_books))
-        print("{} books were read more than once".format(duplicate_book_reads))
-        print("{} redundant reads were performed (book was already read when reading)".format(duplicate_reads))
+        self.print("Read {} out of {} books".format(books_read, self.parameters.n_books))
+        self.print("{} books were read more than once".format(duplicate_book_reads))
+        self.print("{} redundant reads were performed (book was already read when reading)".format(duplicate_reads))
 
         return list(map(lambda a: a.energy, self.agents))
+
+    def print(self, message):
+        if self.log:
+            print(message)
