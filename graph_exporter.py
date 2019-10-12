@@ -23,12 +23,12 @@ def test():
     p_to = Parameters(
         gossip_cost=1,
         read_cost=5,
-        n_agents=int(100),
+        n_agents=int(300),
         n_books=int(1000),
         gossip_protocol=gossip.CallMeOnceGossipProtocol
     )
 
-    results = run_multiple_simulations(p_from, p_to, 20, 15)
+    results = run_multiple_simulations(p_from, p_to, 12, 5)
 
     get_lowest_energy(results)
     export_results_to_csv('test_123', results, p_from)
