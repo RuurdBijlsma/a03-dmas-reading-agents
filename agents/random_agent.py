@@ -1,12 +1,11 @@
 import random
 
-import parameters
 from agents import Agent
 
 
 class RandomAgent(Agent):
     def choose_book(self):
-        random_unread_book = random.randint(1, parameters.N_BOOKS - len(self.read_books))
+        random_unread_book = random.randint(1, self.parameters.n_books - len(self.read_books))
 
         for book in self.read_books:
             if book <= random_unread_book:
