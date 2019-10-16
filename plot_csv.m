@@ -1,8 +1,8 @@
-results = csvread('data/test_123.csv',1,0);
-agents = results(:, 3);
-energy = results(:, 6);
+results = csvread('data/test_1-400-20repeat.csv',1,0);
+agents = results(:, 4);
+energy = results(:, 7);
 
-plot(agents, energy);
-title('Call me once')
+title('Test results')
 xlabel('Agents')
 ylabel('Energy')
+plot(agents, energy);

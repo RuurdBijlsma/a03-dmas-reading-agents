@@ -7,7 +7,6 @@ class Simulation(object):
     def __init__(self, parameters, log=False):
         assert parameters.n_agents is not 0
         self.parameters = parameters
-
         self.log = log
         self.secret = random.randint(1, self.parameters.n_books)
         self.agents = []
@@ -35,7 +34,7 @@ class Simulation(object):
             "\nStarting simulation, each iteration every agent will read a random" +
             " book which hasn't already been read in the previous iterations" +
             "\nAt the end of each iteration the agents share which books have been read via gossip")
-        iteration = 0
+        iteration = 1
 
         secret_found = False
         while True:
@@ -56,11 +55,19 @@ class Simulation(object):
 
             # provided the gossiping works, each agent has the same list of read books, unless some agents are exhausted
             # assert (len(set(map(lambda a: len(a.read_books), self.agents))) == 1)
+            
+            agents_knowing_secret = 0
+            
+            for agent in self.agents:
+                if self.secret in agent.read_books:
+                    agents_knowing_secret += 1
+                    
 
-            if self.secret in self.agents[0].read_books:
-                secret_found = True
+            if agents_knowing_secret > 0:
+                self.print("secret found: {}".format(self.secret))
+                self.print("The number of agents knowing the secrets is {}".format(agents_knowing_secret))
                 break
-
+            
             for agent in self.agents:
                 agent.gossip_protocol.next_iteration()
 
@@ -76,11 +83,8 @@ class Simulation(object):
             if self.book_reads[key] > 1:
                 duplicate_reads += self.book_reads[key] - 1
                 duplicate_book_reads += 1
-
-        if secret_found:
-            self.print("secret found: {}".format(self.secret))
+            
         self.print("\nRead books (synchronized between all agents via gossip): {}".format(self.agents[0].read_books))
-
         self.print("Read {} out of {} books".format(books_read, self.parameters.n_books))
         self.print("{} books were read more than once".format(duplicate_book_reads))
         self.print("{} redundant reads were performed (book was already read when reading)".format(duplicate_reads))
