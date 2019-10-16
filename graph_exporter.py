@@ -18,7 +18,7 @@ def test():
         read_cost=5,
         n_agents=int(1),
         n_books=int(1000),
-        gossip_protocol=gossip.CallMeOnceGossipProtocol
+        gossip_protocol=gossip.LearnNewSecretsGossipProtocol
     )
     p_to = Parameters(
         gossip_cost=1,
@@ -105,6 +105,7 @@ def simulate_parameters(parameters, iteration, repeats):
     energies = []
     for i in range(repeats):
         energies.append(statistics.mean(Simulation(parameters).run()))
+    #     also add the total energy consumption
 
     print("Simulation step {} complete".format(iteration))
 

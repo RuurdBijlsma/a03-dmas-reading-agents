@@ -4,7 +4,7 @@ class Agent(object):
         self.parameters = parameters
         self.name = name
         self.energy = 0
-        self.token = 1
+        # self.token = True
         self.choice = 0
         self.read_books = set()
         self.book_reads = book_reads
