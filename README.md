@@ -15,4 +15,4 @@ Adjust parameters by editing parameters.py
 * Ruurd Bijlsma
 * Jorge Anton Garcia
 * Alexandros Charisis
-
+* Ethelbert Uzodinma
