@@ -3,20 +3,16 @@ from gossip import GossipProtocol
 
 
 class CallMeOnceGossipProtocol(GossipProtocol):
-    def __init__(self, agent: Agent):
-        super().__init__(agent)
-        self.called = []
-
-    def can_gossip(self, other: Agent):
-        if other not in self.called:
-            self.called.append(other)
-            other.gossip_protocol.called.append(self)
+    def can_gossip(self, agent_a, agent_b):
+        if agent_b not in agent_a.called:
+            agent_a.append(agent_b)
+            agent_b.called.append(self)
             return True
 
         return False
 
-    def next_iteration(self):
-        self.called = []
+    def next_iteration(self, agent):
+        agent.called = []
 
     @staticmethod
     def __str__(**kwargs):

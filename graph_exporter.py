@@ -18,14 +18,14 @@ def test():
         read_cost=5,
         n_agents=int(1),
         n_books=int(1000),
-        gossip_protocol=gossip.LearnNewSecretsGossipProtocol
+        gossip_protocol=gossip.LearnNewSecretsGossipProtocol()
     )
     p_to = Parameters(
         gossip_cost=1,
         read_cost=5,
         n_agents=int(100),
         n_books=int(1000),
-        gossip_protocol=gossip.CallMeOnceGossipProtocol
+        gossip_protocol=gossip.CallMeOnceGossipProtocol()
     )
 
     results = run_multiple_simulations(p_from, p_to, 20, 15)

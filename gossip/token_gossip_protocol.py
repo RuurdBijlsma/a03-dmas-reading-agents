@@ -7,15 +7,15 @@ class TokenGossipProtocol(GossipProtocol):
         super().__init__(agent)
         self.token = True
 
-    def can_gossip(self, other: Agent):
-        if other.gossip_protocol.token and self.token:
-            self.token = False
+    def can_gossip(self, agent_a, agent_b):
+        if agent_b.token and agent_a.token:
+            agent_a.token = False
             return True
 
         return False
 
-    def next_iteration(self):
-        self.token = True
+    def next_iteration(self, agent):
+        agent.token = True
 
     @staticmethod
     def __str__(**kwargs):
