@@ -2,18 +2,17 @@ from agents import Agent
 from gossip import GossipProtocol
 
 
-class CallMeOnceGossipProtocol(GossipProtocol):
+class SpiderGossipProtocol(GossipProtocol):
     def can_gossip(self, agent_a, agent_b):
-        if agent_b not in agent_a.called:
-            agent_a.append(agent_b)
-            agent_b.called.append(self)
+        if agent_a.token and agent_b.token:
+            agent_b.token = False
             return True
 
         return False
 
     def next_iteration(self, agent):
-        agent.called = []
+        agent.token = True
 
     @staticmethod
     def __str__(**kwargs):
-        return "Call me once"
+        return "Spider"

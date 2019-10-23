@@ -2,13 +2,10 @@ from agents import Agent
 
 
 class GossipProtocol(object):
-    def __init__(self, agent: Agent):
-        self.agent = agent
-
-    def can_gossip(self, other: Agent):
+    def can_gossip(self, agent_a, agent_b):
         pass
 
-    def next_iteration(self):
+    def next_iteration(self, agent):
         pass
 
     @staticmethod

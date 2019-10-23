@@ -18,17 +18,17 @@ def test():
         read_cost=5,
         n_agents=int(1),
         n_books=int(1000),
-        gossip_protocol=gossip.CallMeOnceGossipProtocol
+        gossip_protocol=gossip.LearnNewSecretsGossipProtocol()
     )
     p_to = Parameters(
         gossip_cost=1,
         read_cost=5,
-        n_agents=int(300),
+        n_agents=int(100),
         n_books=int(1000),
-        gossip_protocol=gossip.CallMeOnceGossipProtocol
+        gossip_protocol=gossip.CallMeOnceGossipProtocol()
     )
 
-    results = run_multiple_simulations(p_from, p_to, 12, 5)
+    results = run_multiple_simulations(p_from, p_to, 20, 15)
 
     get_lowest_energy(results)
     export_results_to_csv('test_123', results, p_from)
@@ -105,6 +105,7 @@ def simulate_parameters(parameters, iteration, repeats):
     energies = []
     for i in range(repeats):
         energies.append(statistics.mean(Simulation(parameters).run()))
+    #     also add the total energy consumption
 
     print("Simulation step {} complete".format(iteration))
 

@@ -11,7 +11,7 @@ To run the program, execute:
 Adjust parameters by editing parameters.py
 
 ### Collaborators: 
-* Jorn van Wier
+* Ethelbert Uzodinma
 * Ruurd Bijlsma
 * Jorge Anton Garcia
 * Alexandros Charisis
