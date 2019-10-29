@@ -14,19 +14,26 @@ data_directory = 'data'
 def test_all(iterations=20, repeats=15):
     print("Now running all tests\n")
 
-    for protocol in [gossip.LearnNewSecretsGossipProtocol(), gossip.TokenGossipProtocol(),
-                     gossip.CallMeOnceGossipProtocol(), gossip.SpiderGossipProtocol()]:
+    protocols = [gossip.LearnNewSecretsGossipProtocol(), gossip.TokenGossipProtocol(),
+                 gossip.CallMeOnceGossipProtocol(), gossip.SpiderGossipProtocol()]
+
+    i = 0
+    for protocol in protocols:
+        i += 1
+        to_print = "NOW TESTING '{}', ITERATIONS: {}, REPEATS PER ITERATION: {}, PROTOCOL {}/{}".format(str(protocol),
+                                                                                                        iterations,
+                                                                                                        repeats, i,
+                                                                                                        len(protocols))
+        print('=' * len(to_print))
+        print(to_print)
+        print('=' * len(to_print))
+
         test(protocol, iterations, repeats)
 
     print("\nAll tests complete")
 
 
 def test(protocol, iterations=20, repeats=15):
-    to_print = "NOW TESTING '{}', ITERATIONS: {}, REPEATS PER ITERATION: {}".format(str(protocol), iterations, repeats)
-    print('=' * len(to_print))
-    print(to_print)
-    print('=' * len(to_print))
-
     p_from = Parameters(
         gossip_cost=1,
         read_cost=5,

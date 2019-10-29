@@ -10,4 +10,4 @@ class LearnNewSecretsGossipProtocol(GossipProtocol):
         pass
 
     def __str__(self):
-        return "Learn New Secret"
+        return "Learn new secret"
