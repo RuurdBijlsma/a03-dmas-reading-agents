@@ -1,4 +1,6 @@
 function energyplot(plotTitle, fileName, energyColumn)
+    clf('reset')
+
     title(plotTitle)
     xlabel("Agents")
     ylabel("Energy")
