@@ -3,8 +3,8 @@ from gossip import GossipProtocol
 
 
 class TokenGossipProtocol(GossipProtocol):
-    def __init__(self, agent: Agent):
-        super().__init__(agent)
+    def __init__(self):
+        super().__init__()
         self.token = True
 
     def can_gossip(self, agent_a, agent_b):

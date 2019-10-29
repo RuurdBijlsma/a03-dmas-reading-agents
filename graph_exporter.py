@@ -4,7 +4,6 @@ from structures.parameters_structure import Parameters
 from structures.simulation_result import SimulationResult
 import gossip
 import statistics
-import threading
 from multiprocessing import Pool
 import multiprocessing as mp
 from simulation import Simulation
@@ -12,40 +11,74 @@ from simulation import Simulation
 data_directory = 'data'
 
 
-def test():
+def test_all(iterations=20, repeats=15):
+    print("Now running all tests\n")
+
+    for protocol in [gossip.LearnNewSecretsGossipProtocol(), gossip.TokenGossipProtocol(),
+                     gossip.CallMeOnceGossipProtocol(), gossip.SpiderGossipProtocol()]:
+        test(protocol, iterations, repeats)
+
+    print("\nAll tests complete")
+
+
+def test(protocol, iterations=20, repeats=15):
+    to_print = "NOW TESTING '{}', ITERATIONS: {}, REPEATS PER ITERATION: {}".format(str(protocol), iterations, repeats)
+    print('=' * len(to_print))
+    print(to_print)
+    print('=' * len(to_print))
+
     p_from = Parameters(
         gossip_cost=1,
         read_cost=5,
         n_agents=int(1),
         n_books=int(1000),
-        gossip_protocol=gossip.LearnNewSecretsGossipProtocol()
+        gossip_protocol=protocol
     )
     p_to = Parameters(
         gossip_cost=1,
         read_cost=5,
-        n_agents=int(100),
+        n_agents=int(200),
         n_books=int(1000),
-        gossip_protocol=gossip.CallMeOnceGossipProtocol()
+        gossip_protocol=protocol
     )
 
-    results = run_multiple_simulations(p_from, p_to, 20, 15)
+    results = run_multiple_simulations(p_from, p_to, iterations, repeats)
 
     get_lowest_energy(results)
-    export_results_to_csv('test_123', results, p_from)
+    get_lowest_total_energy(results)
+
+    export_results_to_csv("{}_{}_{}".format(str(protocol), iterations, repeats), results, p_from)
 
 
 def get_lowest_energy(results):
     assert len(results) > 0
 
-    lowest_energy = results[0].energy
-    lowest_result = Parameters()
+    lowest_energy = results[0].energy_per_agent
+    lowest_result = results[0]
 
     for result in results:
-        if result.energy < lowest_energy:
-            lowest_energy = result.energy
+        if result.energy_per_agent < lowest_energy:
+            lowest_energy = result.energy_per_agent
             lowest_result = result
 
-    print("Lowest energy found was {}, optimal n_agents {}".format(lowest_energy, lowest_result.parameters.n_agents))
+    print("Lowest energy per agent found was {}, optimal n_agents {}".format(lowest_energy,
+                                                                             lowest_result.parameters.n_agents))
+    return lowest_result
+
+
+def get_lowest_total_energy(results):
+    assert len(results) > 0
+
+    lowest_energy = results[0].total_energy
+    lowest_result = results[0]
+
+    for result in results:
+        if result.total_energy < lowest_energy:
+            lowest_energy = result.total_energy
+            lowest_result = result
+
+    print("Lowest total energy found was {}, optimal n_agents {}".format(lowest_energy,
+                                                                         lowest_result.parameters.n_agents))
     return lowest_result
 
 
@@ -89,10 +122,6 @@ def run_multiple_simulations(parameters_from: Parameters, parameters_to: Paramet
                 param_step.__setattr__(key, from_value)
         param_steps.append(param_step)
 
-    print(
-        "Started simulation for csv data, {} iterations, ".format(n_data_points) +
-        "each iteration runs {} simulation(s)".format(repeats_per_data_point))
-
     pool = Pool(processes=mp.cpu_count())
     starmap_arguments = map(lambda ps: (
         ps,
@@ -102,11 +131,15 @@ def run_multiple_simulations(parameters_from: Parameters, parameters_to: Paramet
 
 
 def simulate_parameters(parameters, iteration, repeats):
-    energies = []
+    energies_per_agent = []
+    total_energies = []
+
     for i in range(repeats):
-        energies.append(statistics.mean(Simulation(parameters).run()))
-    #     also add the total energy consumption
+        energies = Simulation(parameters).run()
 
-    print("Simulation step {} complete".format(iteration))
+        energies_per_agent.append(statistics.mean(energies))
+        total_energies.append(sum(energies))
 
-    return SimulationResult(parameters, energies)
+    print("Iteration {} complete".format(iteration))
+
+    return SimulationResult(parameters, statistics.mean(energies_per_agent), statistics.mean(total_energies), repeats)
