@@ -8,6 +8,5 @@ class GossipProtocol(object):
     def next_iteration(self, agent):
         pass
 
-    @staticmethod
-    def __str__(**kwargs):
+    def __str__(self):
         return "General gossip"

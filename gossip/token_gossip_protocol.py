@@ -17,6 +17,5 @@ class TokenGossipProtocol(GossipProtocol):
     def next_iteration(self, agent):
         agent.token = True
 
-    @staticmethod
-    def __str__(**kwargs):
+    def __str__(self):
         return "Token"

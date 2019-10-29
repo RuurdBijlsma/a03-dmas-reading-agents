@@ -17,4 +17,4 @@ class Parameters(object):
 
     def to_csv_row(self):
         return [self.gossip_cost, self.read_cost, self.n_agents, self.n_books, self.all_agents_must_know,
-                gossip.class_to_name(self.gossip_protocol)]
+                str(self.gossip_protocol)]

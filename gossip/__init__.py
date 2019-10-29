@@ -17,9 +17,11 @@ def name_to_class(name):
 
 def class_to_name(class_object):
     # print("class to name " + str(class_object))
-    return {
-        CallMeOnceGossipProtocol: 'Call me once',
-        SpiderGossipProtocol: 'Spider',
-        TokenGossipProtocol: 'Token',
-        LearnNewSecretsGossipProtocol: 'Learn new secret',
-    }[class_object]
+    if isinstance(class_object, CallMeOnceGossipProtocol):
+        return "Call me once"
+    if isinstance(class_object, SpiderGossipProtocol):
+        return "Spider"
+    if isinstance(class_object, TokenGossipProtocol):
+        return "Token"
+    if isinstance(class_object, LearnNewSecretsGossipProtocol):
+        return "Learn new secret"

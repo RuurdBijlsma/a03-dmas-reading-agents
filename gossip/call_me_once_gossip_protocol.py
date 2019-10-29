@@ -14,6 +14,5 @@ class CallMeOnceGossipProtocol(GossipProtocol):
     def next_iteration(self, agent):
         agent.called = []
 
-    @staticmethod
-    def __str__(**kwargs):
+    def __str__(self):
         return "Call me once"
