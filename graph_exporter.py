@@ -13,37 +13,41 @@ data_directory = 'data'
 
 def test_all(iterations=20, repeats=15):
     print("Now running all tests\n")
+    read_costs = [30]
 
     protocols = [gossip.LearnNewSecretsGossipProtocol(), gossip.TokenGossipProtocol(),
                  gossip.CallMeOnceGossipProtocol(), gossip.SpiderGossipProtocol()]
 
     i = 0
-    for protocol in protocols:
-        i += 1
-        to_print = "NOW TESTING '{}', ITERATIONS: {}, REPEATS PER ITERATION: {}, PROTOCOL {}/{}".format(str(protocol),
-                                                                                                        iterations,
-                                                                                                        repeats, i,
-                                                                                                        len(protocols))
-        print('=' * len(to_print))
-        print(to_print)
-        print('=' * len(to_print))
+    for read_cost in read_costs:
+        for protocol in protocols:
+            i += 1
+            to_print = "NOW TESTING '{}', READ COST: {}, ITERATIONS: {}, REPEATS PER ITERATION: {}, PROTOCOL {}/{}".format(
+                str(protocol),
+                read_cost,
+                iterations,
+                repeats, i,
+                len(protocols) * len(read_costs))
+            print('=' * len(to_print))
+            print(to_print)
+            print('=' * len(to_print))
 
-        test(protocol, iterations, repeats)
+            test(protocol, read_cost, iterations, repeats)
 
     print("\nAll tests complete")
 
 
-def test(protocol, iterations=20, repeats=15):
+def test(protocol, read_cost=5, iterations=20, repeats=15):
     p_from = Parameters(
         gossip_cost=1,
-        read_cost=5,
+        read_cost=read_cost,
         n_agents=int(1),
         n_books=int(1000),
         gossip_protocol=protocol
     )
     p_to = Parameters(
         gossip_cost=1,
-        read_cost=5,
+        read_cost=read_cost,
         n_agents=int(200),
         n_books=int(1000),
         gossip_protocol=protocol
@@ -54,7 +58,7 @@ def test(protocol, iterations=20, repeats=15):
     get_lowest_energy(results)
     get_lowest_total_energy(results)
 
-    export_results_to_csv("{}_{}_{}".format(str(protocol), iterations, repeats), results, p_from)
+    export_results_to_csv("{}_{}_{}_{}".format(str(protocol), read_cost, iterations, repeats), results, p_from)
 
 
 def get_lowest_energy(results):
@@ -95,7 +99,8 @@ def export_results_to_csv(experiment_name, results, parameters_from):
     if not os.path.exists(data_directory):
         os.makedirs(data_directory)
 
-    with open(os.path.join(data_directory, experiment_name + '.csv'), 'w', newline='') as csvfile:
+    export_path = os.path.join(data_directory, experiment_name + '.csv')
+    with open(export_path, 'w', newline='') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         csv_keys = list(from_dict.keys())
         csv_keys.append('energy (mean)')
@@ -105,7 +110,7 @@ def export_results_to_csv(experiment_name, results, parameters_from):
         for result in results:
             filewriter.writerow(result.to_csv_row())
 
-        print("Exported data to csv file")
+        print("Exported data to csv file: {}".format(export_path))
 
 
 def run_multiple_simulations(parameters_from: Parameters, parameters_to: Parameters, n_data_points=50,
