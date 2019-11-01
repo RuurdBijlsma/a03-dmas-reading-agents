@@ -11,9 +11,10 @@ from simulation import Simulation
 data_directory = 'data'
 
 
-def test_all(iterations=20, repeats=15):
+def test_all(iterations=20, repeats=15, read_costs=None):
+    if read_costs is None:
+        read_costs = [1, 5, 10]
     print("Now running all tests\n")
-    read_costs = [30]
 
     protocols = [gossip.LearnNewSecretsGossipProtocol(), gossip.TokenGossipProtocol(),
                  gossip.CallMeOnceGossipProtocol(), gossip.SpiderGossipProtocol()]
@@ -22,7 +23,7 @@ def test_all(iterations=20, repeats=15):
     for read_cost in read_costs:
         for protocol in protocols:
             i += 1
-            to_print = "NOW TESTING '{}', READ COST: {}, ITERATIONS: {}, REPEATS PER ITERATION: {}, PROTOCOL {}/{}".format(
+            to_print = "NOW TESTING '{}', READ COST: {}, ITERATIONS: {}, REPEATS PER ITERATION: {}, TEST {}/{}".format(
                 str(protocol),
                 read_cost,
                 iterations,

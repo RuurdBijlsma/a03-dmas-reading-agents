@@ -1,14 +1,12 @@
-function energyplot(plotTitle, fileName, energyColumn, readCost)
+function energyplot(plotTitle, fileName, energyColumn, iterations, repeats, readCost)
     clf('reset')
 
     title(strcat(plotTitle, " (read cost: ", mat2str(readCost), ")"))
     xlabel("Agents")
     ylabel("Energy")
 
-    iterations = 100
-    repeats = 20
-    protocols = {"Token", "Spider", "Call me once", "Learn new secret"}
-    colors = {'r','g','b','m'}
+    protocols = {"Token", "Spider", "Call me once", "Learn new secret"};
+    colors = {'r','g','b','m'};
     plots = [];
 
 
@@ -31,7 +29,9 @@ function energyplot(plotTitle, fileName, energyColumn, readCost)
     end
     hold off;
 
+    imageLocation = strcat("../data/", fileName, "_", mat2str(readCost), "_", mat2str(iterations), "_", mat2str(repeats), ".png");
+    strcat("Saved image to ", imageLocation)
 
     legend(plots, protocols{:});
-    saveas(plots(1), strcat("../data/", fileName, "_", mat2str(readCost), "_", mat2str(iterations), "_", mat2str(repeats), ".png"))
+    saveas(plots(1), imageLocation)
 end

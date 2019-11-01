@@ -99,6 +99,7 @@ class Simulation(object):
                 if protocol.can_gossip(agent, other):
                     agent.gossip(other)
 
+    # In the case of many simulations being run, we don't want to spam the program output with simulation messages
     def print(self, message):
         if self.log:
             print(message)
