@@ -8,14 +8,17 @@ from multiprocessing import Pool
 import multiprocessing as mp
 from simulation import Simulation
 
+# Destination for CSV files
 data_directory = 'data'
 
 
+# Runs all tests
 def test_all(iterations=20, repeats=15, read_costs=None):
     if read_costs is None:
         read_costs = [1, 5, 10]
     print("Now running all tests\n")
 
+    # Protocols that should be tested
     protocols = [gossip.LearnNewSecretsGossipProtocol(), gossip.TokenGossipProtocol(),
                  gossip.CallMeOnceGossipProtocol(), gossip.SpiderGossipProtocol()]
 
@@ -38,6 +41,7 @@ def test_all(iterations=20, repeats=15, read_costs=None):
     print("\nAll tests complete")
 
 
+# Run a single test using given arguments
 def test(protocol, read_cost=5, iterations=20, repeats=15):
     p_from = Parameters(
         gossip_cost=1,
@@ -62,6 +66,7 @@ def test(protocol, read_cost=5, iterations=20, repeats=15):
     export_results_to_csv("{}_{}_{}_{}".format(str(protocol), read_cost, iterations, repeats), results, p_from)
 
 
+# Print lowest energy per agents given a list of results
 def get_lowest_energy(results):
     assert len(results) > 0
 
@@ -78,6 +83,7 @@ def get_lowest_energy(results):
     return lowest_result
 
 
+# Print lowest total energy given a list of results
 def get_lowest_total_energy(results):
     assert len(results) > 0
 
@@ -94,6 +100,7 @@ def get_lowest_total_energy(results):
     return lowest_result
 
 
+# Export results to csv
 def export_results_to_csv(experiment_name, results, parameters_from):
     from_dict = parameters_from.__dict__
 
@@ -114,6 +121,8 @@ def export_results_to_csv(experiment_name, results, parameters_from):
         print("Exported data to csv file: {}".format(export_path))
 
 
+# Takes start and end parameters, then simulates all values between them.
+# Automatically transitions parameter values from start parameters to end parameters
 def run_multiple_simulations(parameters_from: Parameters, parameters_to: Parameters, n_data_points=50,
                              repeats_per_data_point=10):
     from_dict = parameters_from.__dict__
@@ -135,14 +144,17 @@ def run_multiple_simulations(parameters_from: Parameters, parameters_to: Paramet
                 param_step.__setattr__(key, from_value)
         param_steps.append(param_step)
 
+    # Run simulations using all available threads on the CPU
     pool = Pool(processes=mp.cpu_count())
     starmap_arguments = map(lambda ps: (
         ps,
         param_steps.index(ps) + 1,
         repeats_per_data_point), param_steps)
+    # Starmap returns a list of results from the given function, simulate_parameters, which are the SimulationResults
     return pool.starmap(simulate_parameters, starmap_arguments)
 
 
+# Runs simulations for given parameters, iteration argument is just for printing purposes
 def simulate_parameters(parameters, iteration, repeats):
     energies_per_agent = []
     total_energies = []

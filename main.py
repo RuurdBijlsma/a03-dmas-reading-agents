@@ -30,5 +30,6 @@ args = parser.parse_args()
 if __name__ == '__main__':
     graph_exporter.test_all(args.iterations, args.repeats, args.read_costs)
 
+# For debugging a single simulation run:
 # sim = Simulation(parameters, True)
 # energies = sim.run()

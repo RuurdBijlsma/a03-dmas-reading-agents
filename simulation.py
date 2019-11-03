@@ -5,12 +5,15 @@ from gossip import SpiderGossipProtocol, TokenGossipProtocol, LearnNewSecretsGos
 
 
 class Simulation(object):
+    # Set log to True to print logs for the simulation
     def __init__(self, parameters, log=False):
         assert parameters.n_agents is not 0
         self.parameters = parameters
         self.log = log
+        # Simulation picks random book where secret is located
         self.secret = random.randint(1, self.parameters.n_books)
         self.agents = []
+        # Keep dictionary to store which books have been read by agents, for statistical purposes
         self.book_reads = {}
         # Create agents that pick randomly and communicate using a Call Me Once protocol
         self.reset()
@@ -26,7 +29,9 @@ class Simulation(object):
             # agent.gossip_protocol = self.parameters.gossip_protocol(agent)
             self.agents.append(agent)
 
+    # Runs the simulation
     def run(self):
+        # Use self.print instead of print here, to be able to toggle the logging for the simulation
         self.print("Agents will now start searching books for the secret")
         self.print(
             "Protocol: {}, book count: {}, agent count: {}".format(self.parameters.gossip_protocol.__class__.__name__,
@@ -38,28 +43,28 @@ class Simulation(object):
             "\nAt the end of each iteration the agents share which books have been read via gossip")
         iteration = 1
 
-        secret_found = False
+        # Simulation loops until secret is found
         while True:
             self.print("Iteration {}".format(iteration))
 
+            # Every agent chooses a book to read, then reads it.
             for agent in self.agents:
                 agent.choose_book()
                 agent.read()
 
-            # run gossip protocol
+            # Run gossip protocol to communicate which books don't have the secret
             self.gossip_all(self.parameters.gossip_protocol)
 
-            # provided the gossiping works, each agent has the same list of read books, unless some agents are exhausted
-            # assert (len(set(map(lambda a: len(a.read_books), self.agents))) == 1)
-
+            # Check if the secret has been found
             agents_knowing_secret = 0
-
             for agent in self.agents:
                 if self.secret in agent.read_books:
                     agents_knowing_secret += 1
 
             if agents_knowing_secret > 0:
                 if self.parameters.all_agents_must_know:
+                    # In the case of Spider and Token, not all agents know the secret at the end
+                    # This is then shared at the end using lns
                     if isinstance(self.parameters.gossip_protocol, (SpiderGossipProtocol, TokenGossipProtocol)):
                         self.gossip_all(LearnNewSecretsGossipProtocol)
 
