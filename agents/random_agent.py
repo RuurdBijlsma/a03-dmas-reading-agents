@@ -5,6 +5,7 @@ from agents import Agent
 
 class RandomAgent(Agent):
     def choose_book(self):
+        # Picks random unread book
         unread_books_count = self.parameters.n_books - len(self.read_books)
 
         # If there are no unread books, choose a random book

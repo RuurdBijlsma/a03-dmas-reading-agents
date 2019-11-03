@@ -95,7 +95,10 @@ class Simulation(object):
 
         return list(map(lambda a: a.energy, self.agents))
 
+    # Applies gossip protocol for communication using given protocol
     def gossip_all(self, protocol):
+        # Every agent is checked against every other agent to see if they can gossip
+        # If they can gossip according to the protocol, they gossip
         for agent in self.agents:
             for other in self.agents:
                 if agent == other:
